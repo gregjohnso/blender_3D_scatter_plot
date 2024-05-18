@@ -177,8 +177,8 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     nodetree.links.new(setmaterialnode.outputs['Geometry'], outNode.inputs['Geometry']) #link input positions to points
     #Initialize shader nodes
     # Get material
-    mat = bpy.data.materials.get("scattermat")
-    if mat is None:
+    mymat = bpy.data.materials.get("scattermat")
+    if mymat is None:
         mymat=bpy.data.materials.new("scattermat")     # create material
     mymat.use_nodes = True
     # Assign it to object
