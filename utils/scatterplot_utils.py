@@ -114,7 +114,9 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     r=color_in[0]
     g=color_in[1]
     b=color_in[2]
-    a=[0.9 for x in color_in[0]]
+
+    a = [float(i) for i in tsv_column(data=dat,col=6)]
+    # a=[0.9 for x in color_in[0]]
     color_in=[]
     for i in range(0,len(r)-1):
          color_in.append(float(r[i]))
