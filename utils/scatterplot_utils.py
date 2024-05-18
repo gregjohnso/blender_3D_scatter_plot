@@ -156,8 +156,8 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     setpositionnode=nodetree.nodes.new(type="GeometryNodeSetPosition") #add set position
     setmaterialnode=nodetree.nodes.new(type="GeometryNodeSetMaterial") #add set material
     voroninode=nodetree.nodes.new(type="ShaderNodeTexVoronoi") #add voroni texture
-    voroninode.voronoi_dimensions = '3D'
-    voroninode.inputs['Scale'].default_value = 1
+    voroninode.voronoi_dimensions = '4D'
+    voroninode.inputs['Scale'].default_value = 0
     #add subdivision icosphere
     pointsnode.location=(-100,-300) #move points node
     icosnode.location=(-300,-500)
