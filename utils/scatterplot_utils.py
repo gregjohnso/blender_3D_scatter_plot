@@ -75,6 +75,8 @@ def create_object(mesh, name):
     bpy.context.view_layer.objects.active = obj
     obj.select_set(True)
 
+    return obj
+
 def set_up_stage():
     """Set up stage by cutting up the default cube vertices and smoothing it."""
     if "Cube" not in [i.name for i in list(bpy.data.objects)]:
@@ -98,6 +100,7 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     """This is the main function, which wraps all others. Reads in file, assigns space based on file data, and assigns a material per cluster"""
     #Read in file and separate out columns to lists
     #file_in="/Users/rmulqueen/Library/Application Support/Blender/3.4/scripts/addons/blender_3D_scatter_plot-main/test_data/test.tsv"
+    
     dat=read_tsv(file_in)
     n_points=len(dat)
     grouping=tsv_column(data=dat,col=0)
@@ -126,7 +129,7 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     mesh.vertices.add(n_points)
     mesh.update() 
     object_name = bpy.path.display_name("Scatterplot")
-    create_object(mesh, object_name)
+    obj = create_object(mesh, object_name)
     #Set position per vertex
     for i in range(0,n_points-1):
         mesh.vertices[i].co = (x[i],y[i],z[i])
@@ -134,7 +137,7 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     colattr = bpy.data.meshes[mesh.name].attributes.new("color","FLOAT_COLOR","POINT")
     for i in range(0,n_points-1):
         colattr.data[i].color = [r[i], g[i], b[i], 1]
-    obj=bpy.data.objects["Scatterplot"]
+    # obj=bpy.data.objects["Scatterplot"]
     #Initiate a geometry nodes modifier
     obj.modifiers.new("make_vertices","NODES")
     geo_nodes=obj.modifiers["make_vertices"]
@@ -152,12 +155,15 @@ def run_3dscatterplot(file_in,file_out_dir,file_out_name):
     icosnode=nodetree.nodes.new(type="GeometryNodeMeshIcoSphere") #add ico
     icosnode.inputs['Radius'].default_value=0.05
     icosnode.inputs['Subdivisions'].default_value=4
+
     scenetimenode=nodetree.nodes.new(type="GeometryNodeInputSceneTime") #add scene time
     setpositionnode=nodetree.nodes.new(type="GeometryNodeSetPosition") #add set position
     setmaterialnode=nodetree.nodes.new(type="GeometryNodeSetMaterial") #add set material
+
     voroninode=nodetree.nodes.new(type="ShaderNodeTexVoronoi") #add voroni texture
     voroninode.voronoi_dimensions = '4D'
     voroninode.inputs['Scale'].default_value = 0
+
     #add subdivision icosphere
     pointsnode.location=(-100,-300) #move points node
     icosnode.location=(-300,-500)
